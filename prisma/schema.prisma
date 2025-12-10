@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ENUMS
+
+enum OtpPurpose {
+  LOGIN
+  REGISTER
+  RESET_PASSWORD
+  OTHER
+}
+
+enum LoginStatus {
+  SUCCESS
+  FAILED
+  BLOCKED
+}
+
+// MODELS
+
+// USERS
+model User {
+  id              BigInt       @id @default(autoincrement())
+  full_name       String        @db.VarChar(150)
+  email           String        @unique @db.VarChar(255)
+  phone           String?       @db.VarChar(20)
+  password_hash   String        @db.VarChar(255)
+  primary_role_id Int?
+  is_verified     Boolean       @default(false)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  deleted_at      DateTime?
+
+  // Relations
+  primaryRole      Role?          @relation("PrimaryRole", fields: [primary_role_id], references: [id])
+  roles            UserRoles[]
+  sessions         AuthSession[]
+  otp_codes        OtpCode[]
+  password_resets  PasswordReset[]
+  login_attempts   LoginAttempt[]
+}
+
+// ROLES
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String        @db.VarChar(100)
+  slug        String        @db.VarChar(100)
+  description String?       @db.VarChar(255)
+  created_at  DateTime      @default(now())
+
+  // Relations
+  users       UserRoles[]
+  primaryUser User[]        @relation("PrimaryRole")
+}
+
+// USER ROLES (MANY-TO-MANY)
+model UserRoles {
+  user_id     BigInt
+  role_id     Int
+  assigned_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+  role Role @relation(fields: [role_id], references: [id])
+
+  @@id([user_id, role_id])
+  @@map("user_roles")
+}
+
+// AUTH SESSIONS
+model AuthSession {
+  id                BigInt   @id @default(autoincrement())
+  user_id           BigInt
+  refresh_token_hash String?
+  user_agent        String?
+  ip_address        String?
+  created_at        DateTime @default(now())
+  expires_at        DateTime?
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("auth_sessions")
+}
+
+// OTP CODES
+model OtpCode {
+  id         BigInt     @id @default(autoincrement())
+  user_id    BigInt?
+  otp_code   String      @db.Char(10)
+  purpose    OtpPurpose
+  is_used    Boolean     @default(false)
+  expires_at DateTime?
+  created_at DateTime    @default(now())
+
+  // Relation
+  user User? @relation(fields: [user_id], references: [id])
+
+  @@map("otp_codes")
+}
+
+// PASSWORD RESET TOKENS
+model PasswordReset {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt
+  token_hash String    @db.VarChar(255)
+  is_used    Boolean   @default(false)
+  expires_at DateTime?
+  created_at DateTime  @default(now())
+
+  // Relation
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("password_resets")
+}
+
+// LOGIN ATTEMPTS
+model LoginAttempt {
+  id           BigInt      @id @default(autoincrement())
+  email        String?      @db.VarChar(255)
+  user_id      BigInt?
+  ip_address   String?      @db.VarChar(100)
+  status       LoginStatus
+  attempted_at DateTime     @default(now())
+
+  // Relation
+  user User? @relation(fields: [user_id], references: [id])
+
+  @@map("login_attempts")
+}
