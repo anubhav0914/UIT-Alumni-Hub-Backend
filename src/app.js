@@ -1,36 +1,31 @@
 import express from "express";
-import {UserRepository} from "./repositories/user.repository.js";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(express.json());
 
-const userRepo = new UserRepository();
+// CORS setup
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*", // fallback to "*" if not set
+    credentials: true,
+  })
+);
 
-// TEST ROUTE
-app.get("/", (req, res) => {
-  res.send("Backend is running on localhost!");
-});
+// Body parsers
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
+// Static files
+app.use(express.static("public"));
 
+// Cookie parser
+app.use(cookieParser());
 
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-};
+// --- Routes Import ---
+import userRouter from "./router/user.routes.js";
 
-// GET ALL USERS
-app.get("/users", async (req, res) => {
-  try {
-    const users = await userRepo.getAllUsers();
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error fetching users" });
-  }
-});
+// --- Routes Declaration ---
+app.use("/api/v1/users", userRouter);
 
-
-// START SERVER
-const PORT = 3000; // you can change to any port
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+export { app };
