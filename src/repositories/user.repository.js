@@ -29,4 +29,8 @@ export class UserRepository {
       where: { id },
     });
   }
+
+  async getAllUsers() {
+    return prisma.user.findMany();
+  }
 }
