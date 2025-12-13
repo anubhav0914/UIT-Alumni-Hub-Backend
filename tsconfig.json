@@ -15,7 +15,7 @@
     "types": ["node"],
     "allowJs": true
   },
-  "include": ["src"],
+  "include": ["src", "prismaClient.js"],
   "exclude": ["node_modules", "dist"]
 
 }

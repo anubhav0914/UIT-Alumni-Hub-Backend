@@ -1,6 +1,6 @@
-import { prisma } from "../../lib/prisma.js";
-import { ApiError } from "../utils/apiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { prisma } from "../prismaClient.js";
+import  ApiError  from "../utils/ApiError.js";
+import  asyncHandler  from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
@@ -20,7 +20,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     // Fetch user from DB using Prisma
     const user = await prisma.user.findUnique({
       where: { id: decodedToken.userId },
-      select: { id: true, name: true, email: true }, // exclude password
+      select: { id: true, full_name: true, email: true }, // exclude password
     });
 
     if (!user) {

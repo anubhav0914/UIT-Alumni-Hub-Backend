@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  engineType = "library"  
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
@@ -32,42 +32,42 @@ enum LoginStatus {
 
 // USERS
 model User {
-  id              BigInt       @id @default(autoincrement())
-  full_name       String        @db.VarChar(150)
-  email           String        @unique @db.VarChar(255)
-  phone           String?       @db.VarChar(20)
-  password_hash   String        @db.VarChar(255)
+  id              Int       @id @default(autoincrement())
+  full_name       String    @db.VarChar(150)
+  email           String    @unique @db.VarChar(255)
+  phone           String?   @db.VarChar(20)
+  password_hash   String    @db.VarChar(255)
   primary_role_id Int?
-  is_verified     Boolean       @default(false)
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
+  is_verified     Boolean   @default(false)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
   deleted_at      DateTime?
 
   // Relations
-  primaryRole      Role?          @relation("PrimaryRole", fields: [primary_role_id], references: [id])
-  roles            UserRoles[]
-  sessions         AuthSession[]
-  otp_codes        OtpCode[]
-  password_resets  PasswordReset[]
-  login_attempts   LoginAttempt[]
+  primaryRole     Role?           @relation("PrimaryRole", fields: [primary_role_id], references: [id])
+  roles           UserRoles[]
+  sessions        AuthSession[]
+  otp_codes       OtpCode[]
+  password_resets PasswordReset[]
+  login_attempts  LoginAttempt[]
 }
 
 // ROLES
 model Role {
-  id          Int          @id @default(autoincrement())
-  name        String        @db.VarChar(100)
-  slug        String        @db.VarChar(100)
-  description String?       @db.VarChar(255)
-  created_at  DateTime      @default(now())
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  slug        String   @db.VarChar(100)
+  description String?  @db.VarChar(255)
+  created_at  DateTime @default(now())
 
   // Relations
   users       UserRoles[]
-  primaryUser User[]        @relation("PrimaryRole")
+  primaryUser User[]      @relation("PrimaryRole")
 }
 
 // USER ROLES (MANY-TO-MANY)
 model UserRoles {
-  user_id     BigInt
+  user_id     Int
   role_id     Int
   assigned_at DateTime @default(now())
 
@@ -81,13 +81,13 @@ model UserRoles {
 
 // AUTH SESSIONS
 model AuthSession {
-  id                BigInt   @id @default(autoincrement())
-  user_id           BigInt
+  id                 Int       @id @default(autoincrement())
+  user_id            Int
   refresh_token_hash String?
-  user_agent        String?
-  ip_address        String?
-  created_at        DateTime @default(now())
-  expires_at        DateTime?
+  user_agent         String?
+  ip_address         String?
+  created_at         DateTime  @default(now())
+  expires_at         DateTime?
 
   // Relations
   user User @relation(fields: [user_id], references: [id])
@@ -97,13 +97,13 @@ model AuthSession {
 
 // OTP CODES
 model OtpCode {
-  id         BigInt     @id @default(autoincrement())
-  user_id    BigInt?
-  otp_code   String      @db.Char(10)
+  id         Int        @id @default(autoincrement())
+  user_id    Int?
+  otp_code   String     @db.Char(10)
   purpose    OtpPurpose
-  is_used    Boolean     @default(false)
+  is_used    Boolean    @default(false)
   expires_at DateTime?
-  created_at DateTime    @default(now())
+  created_at DateTime   @default(now())
 
   // Relation
   user User? @relation(fields: [user_id], references: [id])
@@ -113,8 +113,8 @@ model OtpCode {
 
 // PASSWORD RESET TOKENS
 model PasswordReset {
-  id         BigInt    @id @default(autoincrement())
-  user_id    BigInt
+  id         Int       @id @default(autoincrement())
+  user_id    Int
   token_hash String    @db.VarChar(255)
   is_used    Boolean   @default(false)
   expires_at DateTime?
@@ -128,12 +128,12 @@ model PasswordReset {
 
 // LOGIN ATTEMPTS
 model LoginAttempt {
-  id           BigInt      @id @default(autoincrement())
-  email        String?      @db.VarChar(255)
-  user_id      BigInt?
-  ip_address   String?      @db.VarChar(100)
+  id           Int         @id @default(autoincrement())
+  email        String?     @db.VarChar(255)
+  user_id      Int?
+  ip_address   String?     @db.VarChar(100)
   status       LoginStatus
-  attempted_at DateTime     @default(now())
+  attempted_at DateTime    @default(now())
 
   // Relation
   user User? @relation(fields: [user_id], references: [id])
