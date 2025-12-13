@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../prismaClient.js";
 
 export class RoleRepository {
   
@@ -41,3 +41,5 @@ export class RoleRepository {
     });
   }
 }
+
+export default new RoleRepository();

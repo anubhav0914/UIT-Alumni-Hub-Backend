@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma.js";
+import { prisma } from "../prismaClient.js";
 
 export class SessionRepository {
   
@@ -54,3 +54,5 @@ export class SessionRepository {
     });
   }
 }
+
+export default new SessionRepository();

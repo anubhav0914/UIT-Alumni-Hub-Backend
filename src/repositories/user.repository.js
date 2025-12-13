@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../prismaClient.js";
 
 export class UserRepository {
   async createUser(data) {
@@ -34,3 +34,5 @@ export class UserRepository {
     return prisma.user.findMany();
   }
 }
+
+export default new UserRepository();
