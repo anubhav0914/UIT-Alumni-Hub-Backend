@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `User` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `full_name` VARCHAR(150) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `phone` VARCHAR(20) NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `Role` (
 
 -- CreateTable
 CREATE TABLE `user_roles` (
-    `user_id` BIGINT NOT NULL,
+    `user_id` INTEGER NOT NULL,
     `role_id` INTEGER NOT NULL,
     `assigned_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -37,8 +37,8 @@ CREATE TABLE `user_roles` (
 
 -- CreateTable
 CREATE TABLE `auth_sessions` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
     `refresh_token_hash` VARCHAR(191) NULL,
     `user_agent` VARCHAR(191) NULL,
     `ip_address` VARCHAR(191) NULL,
@@ -50,8 +50,8 @@ CREATE TABLE `auth_sessions` (
 
 -- CreateTable
 CREATE TABLE `otp_codes` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NULL,
     `otp_code` CHAR(10) NOT NULL,
     `purpose` ENUM('LOGIN', 'REGISTER', 'RESET_PASSWORD', 'OTHER') NOT NULL,
     `is_used` BOOLEAN NOT NULL DEFAULT false,
@@ -63,8 +63,8 @@ CREATE TABLE `otp_codes` (
 
 -- CreateTable
 CREATE TABLE `password_resets` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
     `token_hash` VARCHAR(255) NOT NULL,
     `is_used` BOOLEAN NOT NULL DEFAULT false,
     `expires_at` DATETIME(3) NULL,
@@ -75,9 +75,9 @@ CREATE TABLE `password_resets` (
 
 -- CreateTable
 CREATE TABLE `login_attempts` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) NULL,
-    `user_id` BIGINT NULL,
+    `user_id` INTEGER NULL,
     `ip_address` VARCHAR(100) NULL,
     `status` ENUM('SUCCESS', 'FAILED', 'BLOCKED') NOT NULL,
     `attempted_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
