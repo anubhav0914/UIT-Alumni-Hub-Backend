@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import otpRouter from "./router/otp.routes.js";
 
 const app = express();
 
@@ -27,5 +28,7 @@ import userRouter from "./router/user.routes.js";
 
 // --- Routes Declaration ---
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/otp", otpRouter);
+
 
 export { app };
