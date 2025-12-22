@@ -28,4 +28,23 @@ import userRouter from "./router/user.routes.js";
 // --- Routes Declaration ---
 app.use("/api/v1/users", userRouter);
 
+// --- Auth Routes Import ---
+import authRoutes from "./router/auth.routes.js";
+
+// --- Auth Routes Declaration ---
+app.use("/api/v1/auth", authRoutes);
+
+// --- OTP Routes Import ---
+import otpRoutes from "./router/otp.routes.js";
+
+// --- OTP Routes Declaration ---
+app.use("/api/v1/otp", otpRoutes);
+
+// 
+import emailRoutes from "./router/email.routes.js";
+
+// --- Email Routes Declaration ---
+app.use("/api/v1/email", emailRoutes);
+
+
 export { app };
