@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../prismaClient.js";
 
 export class OtpRepository {
 
@@ -52,3 +52,5 @@ export class OtpRepository {
     });
   }
 }
+
+export default new OtpRepository();

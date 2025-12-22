@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../prismaClient.js";
 
 export class LoginAttemptRepository {
 
@@ -68,3 +68,5 @@ export class LoginAttemptRepository {
     });
   }
 }
+
+export default new LoginAttemptRepository();
