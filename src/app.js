@@ -49,5 +49,10 @@ import emailRoutes from "./router/email.routes.js";
 // --- Email Routes Declaration ---
 app.use("/api/v1/email", emailRoutes);
 
+// Auth routes (register / login / logout)
+import autherRoutes from "./router/auther.routes.js";
+
+app.use("/api/v1/auth", autherRoutes);
+
 
 export { app };
