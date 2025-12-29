@@ -1,8 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { prisma } from "../../../lib/prisma.js";
+import { prisma } from "../../prismaClient.js";
 import  ApiError  from "../../utils/ApiError.js";
-import { asyncHandler } from "../../utils/asyncHandler.js";
+import  asyncHandler  from "../../utils/asyncHandler.js";
 
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -15,6 +18,13 @@ export const loginUser = asyncHandler(async (req, res) => {
   // check user
   const user = await prisma.user.findUnique({
     where: { email },
+     include: {
+      roles: {
+        include: {
+          role: true,
+        },
+      },
+    },
   });
 
   if (!user) {
@@ -24,16 +34,18 @@ export const loginUser = asyncHandler(async (req, res) => {
   // compare password
   const isPasswordCorrect = await bcrypt.compare(
     password,
-    user.password
+    user.password_hash
   );
 
   if (!isPasswordCorrect) {
     throw new ApiError(401, "Invalid credentials");
   }
 
+  const roles = user.roles.map(r => r.role.name);
+
   // generate token
   const token = jwt.sign(
-    { userId: user.id, role: user.role },
+    { userId: user.id, roles },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
